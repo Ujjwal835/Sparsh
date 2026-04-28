@@ -1,24 +1,28 @@
 import { getToken } from "next-auth/jwt";
-import {NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const PUBLIC_ROUTES = ["/", "/login", "/register"];
 
-export async function middleware(req:NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // ✅ Allow public routes without auth
+  const token = await getToken({ req });
+
+  // ✅ BLOCK login/register if already logged in
+  if (token && (pathname === "/login" || pathname === "/register")) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  // ✅ Allow public + auth routes
   if (
     PUBLIC_ROUTES.includes(pathname) ||
+    pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/register") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon")
   ) {
     return NextResponse.next();
   }
-
-  const token = await getToken({ req });
-  // console.log("token",token);
-  
 
   // 🔒 Require login for protected routes
   if (!token) {
