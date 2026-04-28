@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+// npx ts-node prisma/seed.ts   
 
 const prisma = new PrismaClient();
 

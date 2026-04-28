@@ -3,6 +3,7 @@
 import { Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -55,10 +56,13 @@ export default function Navbar() {
               <Search className="w-5 h-5" />
               <ShoppingBag className="w-5 h-5" />
 
-              <button className="hidden md:flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm">
+              <Link
+                href={"login"}
+                className="hidden md:flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm"
+              >
                 <User size={16} />
                 Login
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -92,9 +96,12 @@ export default function Navbar() {
             </div>
 
             {/* LOGIN BUTTON */}
-            <button className="mt-auto bg-black text-white py-3 rounded-xl">
+            <Link
+              href={"login"}
+              className="mt-auto text-center bg-black text-white py-3 rounded-xl"
+            >
               Login
-            </button>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
