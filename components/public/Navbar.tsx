@@ -4,9 +4,12 @@ import { Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { data: session, status } = useSession();
+  console.log("session", session);
 
   return (
     <>
@@ -56,13 +59,39 @@ export default function Navbar() {
               <Search className="w-5 h-5" />
               <ShoppingBag className="w-5 h-5" />
 
-              <Link
+              {/* <Link
                 href={"login"}
                 className="hidden md:flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm"
               >
                 <User size={16} />
                 Login
-              </Link>
+              </Link> */}
+              {status === "authenticated" ? (
+                <div className="relative group hidden md:block">
+                  <button className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm">
+                    <User size={16} />
+                    {session.user?.name}
+                  </button>
+
+                  {/* DROPDOWN */}
+                  <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-xl opacity-0 group-hover:opacity-100 transition p-2">
+                    <button
+                      onClick={() => signOut()}
+                      className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded-lg"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="hidden md:flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm"
+                >
+                  <User size={16} />
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -96,12 +125,27 @@ export default function Navbar() {
             </div>
 
             {/* LOGIN BUTTON */}
-            <Link
+            {/* <Link
               href={"login"}
               className="mt-auto text-center bg-black text-white py-3 rounded-xl"
             >
               Login
-            </Link>
+            </Link> */}
+            {status === "authenticated" ? (
+              <button
+                onClick={() => signOut()}
+                className="mt-auto text-center bg-black text-white py-3 rounded-xl"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="mt-auto text-center bg-black text-white py-3 rounded-xl"
+              >
+                Login
+              </Link>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

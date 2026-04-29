@@ -6,7 +6,8 @@ const PUBLIC_ROUTES = ["/", "/login", "/register"];
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const token = await getToken({ req });
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  // console.log(token);
 
   // ✅ BLOCK login/register if already logged in
   if (token && (pathname === "/login" || pathname === "/register")) {
