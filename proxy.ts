@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const PUBLIC_ROUTES = ["/", "/login", "/register"];
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -12,6 +12,18 @@ export async function middleware(req: NextRequest) {
   // ✅ BLOCK login/register if already logged in
   if (token && (pathname === "/login" || pathname === "/register")) {
     return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/images") ||
+    pathname.startsWith("/jutiyan") || // 👈 ADD THIS
+    pathname.includes(".png") ||
+    pathname.includes(".jpg") ||
+    pathname.includes(".jpeg") ||
+    pathname.includes(".webp")
+  ) {
+    return NextResponse.next();
   }
 
   // ✅ Allow public + auth routes
@@ -47,3 +59,8 @@ export async function middleware(req: NextRequest) {
 
   return NextResponse.next();
 }
+
+// 👇 ADD HERE (outside function)
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+};
