@@ -74,7 +74,11 @@ export const authOptions: AuthOptions = {
     },
 
     async session({ session, token }) {
-      session.user.role = token.role as string;
+      if (session.user) {
+        session.user.role = token.role as string;
+        delete session.user.image;
+      }
+      // session.user.role = token.role as string;
       return session;
     },
   },
