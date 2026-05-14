@@ -12,6 +12,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
+    "@fontsource/outfit": "^5.2.8",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.3",
     "bcrypt": "^6.0.0",
